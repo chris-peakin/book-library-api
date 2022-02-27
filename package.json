@@ -1,0 +1,28 @@
+{
+  "name": "book-library-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon -r dotenv/config index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chris-peakin/book-library-api.git"
+  },
+  "author": "chris peakin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chris-peakin/book-library-api/issues"
+  },
+  "homepage": "https://github.com/chris-peakin/book-library-api#readme",
+  "devDependencies": {
+    "dotenv": "^16.0.0",
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "express": "^4.17.3",
+    "mysql2": "^2.3.3",
+  }
+}
