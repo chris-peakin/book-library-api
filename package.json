@@ -4,8 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prestart": "node scripts/create-database.js",
     "start": "nodemon -r dotenv/config index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pretest": "node scripts/create-database.js test",
+    "test": "mocha tests/**/*.js --exit --recursive --timout 60000 --file ./tests/test-setup.js",
+    "posttest": "node scripts/drop-database.js"
   },
   "repository": {
     "type": "git",
@@ -18,11 +21,14 @@
   },
   "homepage": "https://github.com/chris-peakin/book-library-api#readme",
   "devDependencies": {
+    "chai": "^4.3.6",
     "dotenv": "^16.0.0",
-    "nodemon": "^2.0.15"
+    "mocha": "^9.2.1",
+    "nodemon": "^2.0.15",
+    "supertest": "^6.2.2"
   },
   "dependencies": {
     "express": "^4.17.3",
-    "mysql2": "^2.3.3",
+    "mysql2": "^2.3.3"
   }
 }
