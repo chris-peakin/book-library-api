@@ -51,7 +51,7 @@ const setUpDatabase = async () => {
     //   artistId INT,
     //   CONSTRAINT fk_artistId_album FOREIGN KEY (artistId) REFERENCES Artist (id)
     //   )`);
-    // db.close();
+    db.close();
 
   } catch (err) {
    // if something goes wrong, console.log the error and the current environment variables
