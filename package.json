@@ -8,7 +8,7 @@
     "start": "nodemon -r dotenv/config index.js",
     "pretest": "node scripts/create-database.js test",
     "test": "mocha tests/**/*.js --exit --recursive --timout 60000 --file ./tests/test-setup.js",
-    "posttest": "node scripts/drop-database.js"
+    "posttest": "node scripts/drop-database.js test"
   },
   "repository": {
     "type": "git",
