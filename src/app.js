@@ -5,6 +5,6 @@ const app = express();
 
 app.use(express.json());
 
-app.post('/readers', readerRouter);
+app.use('/readers', readerRouter);
 
 module.exports = app;

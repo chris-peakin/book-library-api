@@ -4,6 +4,6 @@ const readerController = require('../controllers/readers');
 
 const router = express.Router();
 
-router.post('/readers', readerController.create);
+router.post('/', readerController.create);
 
 module.exports = router;

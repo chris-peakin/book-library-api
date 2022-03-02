@@ -1,4 +1,3 @@
-const getDb = require('../services/db');
 const {Reader} = require('../models');
 
 exports.create = async (req, res) =>{
