@@ -1,11 +1,10 @@
 const express = require('express');
+const readerRouter = require('./routes/readerRouter');
 
 const app = express();
 
-const readerController = require('./controllers/readers');
+app.use(express.json());
 
-const router = express.Router();
-
-app.post('/readers', readerController.create);
+app.post('/readers', readerRouter);
 
 module.exports = app;
