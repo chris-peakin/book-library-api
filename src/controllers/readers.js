@@ -23,9 +23,10 @@ exports.findByPk = async (req, res) => {
 
 exports.update = async (req, res) => {
     const {readerId} = req.params;
+    const foundReader = await Reader.findByPk(readerId);
     const newData = req.body;
 
-    if (!readerId){
+    if (!foundReader){
         res.status(404).json({error: 'The reader could not be found.'});
     } else {
         const [ updatedRows ] = await Reader.update(newData, {where: {} });
@@ -35,10 +36,12 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
     const {readerId} = req.params;
+    const foundReader = await Reader.findByPk(readerId);
 
-    if (!readerId){
+    if (!foundReader){
         res.status(404).json({error: 'The reader could not be found.'});
     } else {
         const deletedReader = await Reader.destroy({where: {id: readerId}});
+        return res.status(204).json();
     }
 }
