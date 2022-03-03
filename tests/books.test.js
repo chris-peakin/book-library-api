@@ -13,7 +13,7 @@ describe('/books', () => {
     describe('with no records in the database', () => {
       describe('POST /books', () => {
         it('creates a new book in the database', async () => {
-          const response = await request(app).post('/book').send({
+          const response = await request(app).post('/books').send({
             title: 'Chemistry3',
             author: 'Andrew Burrows',
             genre: 'Science',
@@ -103,7 +103,7 @@ describe('/books', () => {
   
         it('returns a 404 if the book does not exist', async () => {
           const response = await request(app)
-            .patch('/readers/12345')
+            .patch('/books/12345')
             .send({ genre: 'Dark Fantasy' });
   
           expect(response.status).to.equal(404);

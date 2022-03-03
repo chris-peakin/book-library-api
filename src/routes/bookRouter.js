@@ -8,7 +8,7 @@ router.post('/', bookController.create);
 
 router.get('/', bookController.findAll);
 
-router.get('/bookId', bookController.findByPk);
+router.get('/:bookId', bookController.findByPk);
 
 router.patch('/:bookId', bookController.update);
 
