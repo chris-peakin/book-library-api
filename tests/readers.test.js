@@ -29,8 +29,98 @@ describe('/readers', () => {
         expect(newReaderRecord.email).to.equal('future_ms_darcy@gmail.com');
         expect(newReaderRecord.password).to.equal('ilovebooks');
       });
+
+      it('throws an error if the email is incorrectly formatted', async () => {
+        const response = await request(app).post('/readers').send({
+          name: 'Elizabeth Bennet',
+          email: 'this is not an email address!',
+          password: 'ilovebooks',
+        });
+        const newReaderRecord = await Reader.findByPk(response.body.id, {
+          raw: true,
+        });
+
+        expect(response.status).to.equal(400);
+        expect(response.body).to.haveOwnProperty('errors');
+        expect(newReaderRecord).to.equal(null);
+      });
+
+      it('throws an error if the password is too short', async () =>{
+        const response = await request(app).post('/readers').send({
+          name: 'Elizabeth Bennet',
+          email: 'future_ms_darcy@gmail.com',
+          password: 'nope'
+        });
+        const newReaderRecord = await Reader.findByPk(response.body.id, {
+          raw: true,
+        });
+
+        expect(response.status).to.equal(400);
+        expect(response.body).to.haveOwnProperty('errors');
+        expect(newReaderRecord).to.equal(null);
+      });
+
+      it('throws an error if the password is too long', async () =>{
+        const response = await request(app).post('/readers').send({
+          name: 'Elizabeth Bennet',
+          email: 'future_ms_darcy@gmail.com',
+          password: 'thisissimplythelongestpasswordihaveeverseeninmylife'
+        });
+        const newReaderRecord = await Reader.findByPk(response.body.id, {
+          raw: true,
+        });
+
+        expect(response.status).to.equal(400);
+        expect(response.body).to.haveOwnProperty('errors');
+        expect(newReaderRecord).to.equal(null);
+      });
+
+      it('throws an error if there is no name', async () =>{
+        const response = await request(app).post('/readers').send({
+          name: null,
+          email: 'future_ms_darcy@gmail.com',
+          password: 'ilovebooks',
+        });
+        const newReaderRecord = await Reader.findByPk(response.body.id, {
+          raw: true,
+        });
+
+        expect(response.status).to.equal(400);
+        expect(response.body).to.haveOwnProperty('errors');
+        expect(newReaderRecord).to.equal(null);
+      });
+
+      it('throws an error if there is no email', async () =>{
+        const response = await request(app).post('/readers').send({
+          name: 'Elizabeth Bennet',
+          email: null,
+          password: 'ilovebooks',
+        });
+        const newReaderRecord = await Reader.findByPk(response.body.id, {
+          raw: true,
+        });
+
+        expect(response.status).to.equal(400);
+        expect(response.body).to.haveOwnProperty('errors');
+        expect(newReaderRecord).to.equal(null);
+      });
+
+      it('throws an error if there is no password', async () =>{
+        const response = await request(app).post('/readers').send({
+          name: 'Elizabeth Bennet',
+          email: 'future_ms_darcy@gmail.com',
+          password: null,
+        });
+        const newReaderRecord = await Reader.findByPk(response.body.id, {
+          raw: true,
+        });
+
+        expect(response.status).to.equal(400);
+        expect(response.body).to.haveOwnProperty('errors');
+        expect(newReaderRecord).to.equal(null);
     });
   });
+});
 
   describe('with records in the database', () => {
     let readers;
@@ -105,6 +195,46 @@ describe('/readers', () => {
         expect(response.status).to.equal(404);
         expect(response.body.error).to.equal('The reader could not be found.');
       });
+
+      it('throws an error if the updated email is incorrectly formatted', async () =>{
+        const reader = readers[0];
+        const response = await request(app)
+        .patch(`/readers/${reader.id}`)
+        .send({ email: 'this is not an email!' });
+      const updatedReaderRecord = await Reader.findByPk(reader.id, {
+        raw: true,
+      });
+
+      expect(response.status).to.equal(400);
+      expect(response.body).to.haveOwnProperty('errors');
+      });
+
+      it('throws an error if the updated password is too short', async () =>{
+        const reader = readers[0];
+        const response = await request(app)
+        .patch(`/readers/${reader.id}`)
+        .send({ password: 'nope' });
+      const updatedReaderRecord = await Reader.findByPk(reader.id, {
+        raw: true,
+      });
+
+      expect(response.status).to.equal(400);
+      expect(response.body).to.haveOwnProperty('errors');
+      });
+
+      it('throws an error if the updated password is too long', async () =>{
+        const reader = readers[0];
+        const response = await request(app)
+        .patch(`/readers/${reader.id}`)
+        .send({ password: 'thisissimplythelongestpasswordihaveeverseeninmylife' });
+      const updatedReaderRecord = await Reader.findByPk(reader.id, {
+        raw: true,
+      });
+
+      expect(response.status).to.equal(400);
+      expect(response.body).to.haveOwnProperty('errors');
+      });
+
     });
 
     describe('DELETE /readers/:id', () => {
