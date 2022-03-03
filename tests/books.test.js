@@ -30,6 +30,77 @@ describe('/books', () => {
           expect(newBookRecord.genre).to.equal('Science');
           expect(newBookRecord.ISBN).to.equal('9780198829980');
         });
+
+        it('throws an error if there is no title', async () =>{
+          const response = await request(app).post('/books').send({
+            title: null,
+            author: 'Andrew Burrows',
+            genre: 'Science',
+            ISBN: '9780198829980',
+          });
+          const newBookRecord = await Book.findByPk(response.body.id, {
+            raw: true,
+          });
+
+          expect(response.status).to.equal(400);
+          expect(response.body).to.haveOwnProperty('errors');
+          expect(newBookRecord).to.equal(null);
+        })
+
+        it('throws an error if there is no author', async () =>{
+          const response = await request(app).post('/books').send({
+            title: 'Chemistry3',
+            author: null,
+            genre: 'Science',
+            ISBN: '9780198829980',
+          });
+          const newBookRecord = await Book.findByPk(response.body.id, {
+            raw: true,
+          });
+
+          expect(response.status).to.equal(400);
+          expect(response.body).to.haveOwnProperty('errors');
+          expect(newBookRecord).to.equal(null);
+        })
+
+        it('does NOT throw an error if there is no genre', async () => {
+          const response = await request(app).post('/books').send({
+            title: 'Chemistry3',
+            author: 'Andrew Burrows',
+            genre: null,
+            ISBN: '9780198829980',
+          });
+          const newBookRecord = await Book.findByPk(response.body.id, {
+            raw: true,
+          });
+  
+          expect(response.status).to.equal(201);
+          expect(response.body.title).to.equal('Chemistry3');
+          expect(newBookRecord.title).to.equal('Chemistry3');
+          expect(newBookRecord.author).to.equal('Andrew Burrows');
+          expect(newBookRecord.genre).to.equal(null);
+          expect(newBookRecord.ISBN).to.equal('9780198829980');
+        });
+
+        it('does NOT throw an error if there is no ISBN', async () => {
+          const response = await request(app).post('/books').send({
+            title: 'Chemistry3',
+            author: 'Andrew Burrows',
+            genre: 'Science',
+            ISBN: null,
+          });
+          const newBookRecord = await Book.findByPk(response.body.id, {
+            raw: true,
+          });
+  
+          expect(response.status).to.equal(201);
+          expect(response.body.title).to.equal('Chemistry3');
+          expect(newBookRecord.title).to.equal('Chemistry3');
+          expect(newBookRecord.author).to.equal('Andrew Burrows');
+          expect(newBookRecord.genre).to.equal('Science');
+          expect(newBookRecord.ISBN).to.equal(null);
+        });
+
       });
     });
   
