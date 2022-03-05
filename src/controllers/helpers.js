@@ -54,11 +54,13 @@ exports.updateItemById = async (res, model, item, id) => {
 
 exports.deleteItemById = async (res, model, id) => {
     const Model = getModel(model);
-    const deletedItem = await Model.destroy({where: {id}});
-
-    if (!deletedItem){
+    const foundItem = await Model.findByPk(id);
+    console.log(foundItem);
+    console.log(id);
+    if (!foundItem){
         res.status(404).json(get404Error(model));
     } else {
+        const deletedItem = await Model.destroy({where: {id}});
         res.status(204).send();
     }
 };
