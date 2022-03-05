@@ -6,7 +6,10 @@ exports.getReaders = (_, res) => findAllItems(res, 'reader');
 
 exports.getReaderById = (req, res) => findItemById(res, 'reader', req.params.id);
 
-exports.updateReaderById = (req, res) => updateItemById(res, 'reader', req.params.id, req.body);
+exports.updateReaderById = (req, res) => {
+    //verification should be going here - check email is correct format and password is right length
+    return updateItemById(res, 'reader', req.params.id, req.body);
+}
 
 exports.deleteReaderById = (req, res) => deleteItemById(res, 'reader', req.params.id);
 

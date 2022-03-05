@@ -44,6 +44,7 @@ exports.updateItemById = async (res, model, id, item) => {
     const Model = getModel(model);
     console.log(item);
     const [ itemsUpdated ] = await Model.update(item, {where: {id}});
+    console.log(itemsUpdated);
 
     if (!itemsUpdated){
         res.status(404).json(get404Error(model));
