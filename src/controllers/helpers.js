@@ -40,8 +40,9 @@ exports.findItemById = async (res, model, id) => {
     }
 };
 
-exports.updateItemById = async (res, model, item, id) => {
+exports.updateItemById = async (res, model, id, item) => {
     const Model = getModel(model);
+    console.log(item);
     const [ itemsUpdated ] = await Model.update(item, {where: {id}});
 
     if (!itemsUpdated){
@@ -54,13 +55,11 @@ exports.updateItemById = async (res, model, item, id) => {
 
 exports.deleteItemById = async (res, model, id) => {
     const Model = getModel(model);
-    const foundItem = await Model.findByPk(id);
-    console.log(foundItem);
-    console.log(id);
-    if (!foundItem){
+    const deletedItem = await Model.destroy({where: {id}});
+
+    if (!deletedItem){
         res.status(404).json(get404Error(model));
     } else {
-        const deletedItem = await Model.destroy({where: {id}});
         res.status(204).send();
     }
 };
