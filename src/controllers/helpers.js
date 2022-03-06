@@ -42,16 +42,18 @@ exports.findItemById = async (res, model, id) => {
 
 exports.updateItemById = async (res, model, id, item) => {
     const Model = getModel(model);
-    console.log(item);
-    const [ itemsUpdated ] = await Model.update(item, {where: {id}});
-    console.log(itemsUpdated);
-
-    if (!itemsUpdated){
-        res.status(404).json(get404Error(model));
-    } else {
-        const updatedItem = await Model.findByPk(id);
-        res.status(200).json(updatedItem);
-    }
+    try{
+        const [ itemsUpdated ] = await Model.update(item, {where: {id}});
+        
+        if (!itemsUpdated){
+            res.status(404).json(get404Error(model));
+        } else {
+            const updatedItem = await Model.findByPk(id);
+            res.status(200).json(updatedItem);
+        }
+    } catch (err){
+        res.status(400).json({errors: err});
+    };
 };
 
 exports.deleteItemById = async (res, model, id) => {

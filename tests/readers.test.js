@@ -196,7 +196,7 @@ describe('/readers', () => {
         expect(response.body.error).to.equal('The reader could not be found.');
       });
 
-      it.only('throws an error if the updated email is incorrectly formatted', async () =>{
+      it('throws an error if the updated email is incorrectly formatted', async () =>{
         const reader = readers[0];
         const response = await request(app)
         .patch(`/readers/${reader.id}`)
@@ -209,7 +209,7 @@ describe('/readers', () => {
       expect(response.body).to.haveOwnProperty('errors');
       });
 
-      it.only('throws an error if the updated password is too short', async () =>{
+      it('throws an error if the updated password is too short', async () =>{
         const reader = readers[0];
         const response = await request(app)
         .patch(`/readers/${reader.id}`)
@@ -222,7 +222,7 @@ describe('/readers', () => {
       expect(response.body).to.haveOwnProperty('errors');
       });
 
-      it.only('throws an error if the updated password is too long', async () =>{
+      it('throws an error if the updated password is too long', async () =>{
         const reader = readers[0];
         const response = await request(app)
         .patch(`/readers/${reader.id}`)
