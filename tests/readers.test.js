@@ -27,7 +27,8 @@ describe('/readers', () => {
         expect(response.body.name).to.equal('Elizabeth Bennet');
         expect(newReaderRecord.name).to.equal('Elizabeth Bennet');
         expect(newReaderRecord.email).to.equal('future_ms_darcy@gmail.com');
-        expect(response.password).to.equal(undefined);
+        expect(newReaderRecord.password).to.equal('ilovebooks');
+        expect(response.body.password).to.equal(undefined);
       });
 
       it('throws an error if the email is incorrectly formatted', async () => {
@@ -233,6 +234,33 @@ describe('/readers', () => {
 
       expect(response.status).to.equal(400);
       expect(response.body).to.haveOwnProperty('errors');
+      });
+
+      it('does not return the password when updated', async () => {
+        const reader = readers[0];
+        const response = await request(app)
+          .patch(`/readers/${reader.id}`)
+          .send({ password: 'mynewpassword' });
+        const updatedReaderRecord = await Reader.findByPk(reader.id, {
+          raw: true,
+        });
+
+        expect(response.status).to.equal(200);
+        expect(response.body.password).to.equal(undefined);
+      });
+
+      it('does not return the password when a different property is updated', async () => {
+        const reader = readers[0];
+        const response = await request(app)
+          .patch(`/readers/${reader.id}`)
+          .send({ email: 'miss_e_bennet@gmail.com' });
+        const updatedReaderRecord = await Reader.findByPk(reader.id, {
+          raw: true,
+        });
+
+        expect(response.status).to.equal(200);
+        expect(updatedReaderRecord.email).to.equal('miss_e_bennet@gmail.com');
+        expect(response.body.password).to.equal(undefined);
       });
 
     });
