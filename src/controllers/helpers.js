@@ -61,9 +61,7 @@ exports.updateItemById = async (res, model, id, item) => {
             res.status(404).json(get404Error(model));
         } else {
             const updatedItem = await Model.findByPk(id);
-            // console.log(updatedItem);
             const itemWithoutPassword = removePassword(updatedItem.dataValues);
-            console.log(itemWithoutPassword);
             res.status(200).json(itemWithoutPassword);
         }
     } catch (err){
