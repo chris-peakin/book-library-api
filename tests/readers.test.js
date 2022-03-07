@@ -240,7 +240,6 @@ describe('/readers', () => {
     describe('DELETE /readers/:id', () => {
       it('deletes reader record by id', async () => {
         const reader = readers[0];
-        console.log(reader.id);
         const response = await request(app).delete(`/readers/${reader.id}`);
         const deletedReader = await Reader.findByPk(reader.id, { raw: true });
 
