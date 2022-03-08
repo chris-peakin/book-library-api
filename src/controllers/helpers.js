@@ -45,7 +45,7 @@ exports.findAllItems = async (res, model) => {
 
 exports.findItemById = async (res, model, id) => {
     const Model = getModel(model);
-    const item = await Model.findByPk(id);
+    const item = await Model.findByPk(id, {includes: Genre});
     if (!item){
         res.status(404).json(get404Error(model));
     } else {
@@ -80,4 +80,12 @@ exports.deleteItemById = async (res, model, id) => {
     } else {
         res.status(204).send();
     }
+};
+
+exports.getAllBooks = (res, model) => {
+    const Model = getModel(model);
+
+    return Model.findAll({inlcude: Book}).then((items) =>{
+        res.status(200).json(items);
+    });
 };

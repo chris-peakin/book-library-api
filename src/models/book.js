@@ -17,7 +17,7 @@ module.exports = (connection, DataTypes) => {
         author: {
             type: DataTypes.STRING,
             allowNull: false,
-            validation: {
+            validate: {
                 notNull: {
                     args: [true],
                     msg: 'We need a book author',

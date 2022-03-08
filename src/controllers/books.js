@@ -1,8 +1,8 @@
-const {createItem, findAllItems, findItemById, updateItemById, deleteItemById} = require('./helpers');
+const {createItem, findAllItems, findItemById, updateItemById, deleteItemById, getAllBooks} = require('./helpers');
 
 exports.createBook = (req, res) => createItem(res, 'book', req.body);
 
-exports.getBooks = (_, res) => findAllItems(res, 'book');
+exports.getBooks = (_, res) => getAllBooks(res, 'book');
 
 exports.getBookById = (req, res) => findItemById (res, 'book', req.params.id);
 
