@@ -5,8 +5,14 @@ module.exports = (connection, DataTypes) => {
             allowNull: false,
             unique: true,
             validate: {
-                notNull: true,
-                notEmpty: true,
+                notNull: {
+                    args: [true],
+                    msg: 'We need an author so that we can create one',
+                },
+                notEmpty: {
+                    args: [true],
+                    msg: 'The book author cannot be empty',
+                },
             }
         }
     }

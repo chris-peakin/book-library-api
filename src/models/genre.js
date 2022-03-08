@@ -11,7 +11,7 @@ module.exports = (connection, DataTypes) => {
                 },
                 notEmpty: {
                     args: [true],
-                    msg: 'We need a genre in so that we can create one',
+                    msg: 'The book genre cannot be empty',
                 },
             },
         },

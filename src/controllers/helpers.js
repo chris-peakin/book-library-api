@@ -45,7 +45,7 @@ exports.findAllItems = async (res, model) => {
 
 exports.findItemById = async (res, model, id) => {
     const Model = getModel(model);
-    const item = await Model.findByPk(id, {includes: Genre});
+    const item = await Model.findByPk(id, {includes: Genre, Author});
     if (!item){
         res.status(404).json(get404Error(model));
     } else {

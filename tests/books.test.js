@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const request = require('supertest');
-const { Book } = require('../src/models');
+const { Book, Author, Genre } = require('../src/models');
 const app = require('../src/app');
 
 describe('/books', () => {
@@ -8,6 +8,10 @@ describe('/books', () => {
   
     beforeEach(async () => {
       await Book.destroy({ where: {} });
+      await Genre.destroy({ where: {} });
+      await Author.destroy({ where: {} });
+      testGenre = await Genre.create({ genre: 'Science'});
+      testAuthor = await Author.create({ author: 'Andrew Burrows'});
     });
   
     describe('with no records in the database', () => {
@@ -15,8 +19,8 @@ describe('/books', () => {
         it('creates a new book in the database', async () => {
           const response = await request(app).post('/books').send({
             title: 'Chemistry3',
-            author: 'Andrew Burrows',
-            genre: 'Science',
+            author: testAuthor.author,
+            genre: testGenre.genre,
             ISBN: '9780198829980',
           });
           const newBookRecord = await Book.findByPk(response.body.id, {
@@ -26,8 +30,8 @@ describe('/books', () => {
           expect(response.status).to.equal(201);
           expect(response.body.title).to.equal('Chemistry3');
           expect(newBookRecord.title).to.equal('Chemistry3');
-          expect(newBookRecord.author).to.equal('Andrew Burrows');
-          expect(newBookRecord.genre).to.equal('Science');
+          expect(newBookRecord.author).to.equal(testAuthor.author);
+          expect(newBookRecord.genre).to.equal(testGenre.genre);
           expect(newBookRecord.ISBN).to.equal('9780198829980');
         });
 
