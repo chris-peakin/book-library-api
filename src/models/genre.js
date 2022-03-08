@@ -4,13 +4,19 @@ module.exports = (connection, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
-            validate: {
-                notNull: true,
-                notEmpty: true,
-            }
-        }
-    }
+            validation: {
+                notNull: {
+                    args: [true],
+                    msg: 'We need a genre in so that we can create one',
+                },
+                notEmpty: {
+                    args: [true],
+                    msg: 'We need a genre in so that we can create one',
+                },
+            },
+        },
+    };
     
     const GenreModel = connection.define('Genre', schema);
     return GenreModel;
-}
+};
