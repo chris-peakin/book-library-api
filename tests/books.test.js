@@ -5,6 +5,8 @@ const app = require('../src/app');
 
 describe('/books', () => {
     before(async () => Book.sequelize.sync());
+    let testGenre;
+    let testAuthor;
   
     beforeEach(async () => {
       await Book.destroy({ where: {} });
