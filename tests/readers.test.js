@@ -202,9 +202,6 @@ describe('/readers', () => {
         const response = await request(app)
         .patch(`/readers/${reader.id}`)
         .send({ email: 'this is not an email!' });
-      const updatedReaderRecord = await Reader.findByPk(reader.id, {
-        raw: true,
-      });
 
       expect(response.status).to.equal(400);
       expect(response.body).to.haveOwnProperty('errors');
@@ -215,9 +212,6 @@ describe('/readers', () => {
         const response = await request(app)
         .patch(`/readers/${reader.id}`)
         .send({ password: 'nope' });
-      const updatedReaderRecord = await Reader.findByPk(reader.id, {
-        raw: true,
-      });
 
       expect(response.status).to.equal(400);
       expect(response.body).to.haveOwnProperty('errors');
@@ -228,9 +222,6 @@ describe('/readers', () => {
         const response = await request(app)
         .patch(`/readers/${reader.id}`)
         .send({ password: 'thisissimplythelongestpasswordihaveeverseeninmylife' });
-      const updatedReaderRecord = await Reader.findByPk(reader.id, {
-        raw: true,
-      });
 
       expect(response.status).to.equal(400);
       expect(response.body).to.haveOwnProperty('errors');
@@ -241,9 +232,6 @@ describe('/readers', () => {
         const response = await request(app)
           .patch(`/readers/${reader.id}`)
           .send({ password: 'mynewpassword' });
-        const updatedReaderRecord = await Reader.findByPk(reader.id, {
-          raw: true,
-        });
 
         expect(response.status).to.equal(200);
         expect(response.body.password).to.equal(undefined);

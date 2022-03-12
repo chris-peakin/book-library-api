@@ -64,8 +64,6 @@ describe('/books', () => {
             raw: true,
           });
 
-          console.log(newBookRecord);
-
           expect(response.status).to.equal(400);
           expect(response.body).to.haveOwnProperty('errors');
           expect(newBookRecord).to.equal(null);
@@ -82,7 +80,6 @@ describe('/books', () => {
           const newBookRecord = await Book.findByPk(response.body.id, {
             raw: true,
           });
-          console.log(newBookRecord);
 
           expect(response.status).to.equal(400);
           expect(response.body).to.haveOwnProperty('errors');
@@ -105,6 +102,86 @@ describe('/books', () => {
           expect(newBookRecord.title).to.equal('Chemistry3');
           expect(newBookRecord.ISBN).to.equal(null);
         });
+
+        it('throws an error if the ISBN is not a number', async () =>{
+          const response = await request(app).post('/books').send({
+            title: 'Chemistry3',
+            AuthorId: testAuthor.id,
+            GenreId: testGenre.id,
+            ISBN: 'IAmNotANumber',
+          });
+          const newBookRecord = await Book.findByPk(response.body.id, {
+            raw: true,
+          });
+
+          expect(response.status).to.equal(400);
+          expect(response.body).to.haveOwnProperty('errors');
+          expect(newBookRecord).to.equal(null);
+        })
+
+        it('throws an error if the ISBN is less than 10 digits', async () =>{
+          const response = await request(app).post('/books').send({
+            title: 'Chemistry3',
+            AuthorId: testAuthor.id,
+            GenreId: testGenre.id,
+            ISBN: '1234',
+          });
+          const newBookRecord = await Book.findByPk(response.body.id, {
+            raw: true,
+          });
+
+          expect(response.status).to.equal(400);
+          expect(response.body).to.haveOwnProperty('errors');
+          expect(newBookRecord).to.equal(null);
+        })
+
+        it('throws an error if the ISBN is more than 13 digits', async() =>{
+          const response = await request(app).post('/books').send({
+            title: 'Chemistry3',
+            AuthorId: testAuthor.id,
+            GenreId: testGenre.id,
+            ISBN: '123456789123456789',
+          });
+          const newBookRecord = await Book.findByPk(response.body.id, {
+            raw: true,
+          });
+
+          expect(response.status).to.equal(400);
+          expect(response.body).to.haveOwnProperty('errors');
+          expect(newBookRecord).to.equal(null);
+        })
+
+        it('throws an error if the ISBN is 11 digits', async() =>{
+          const response = await request(app).post('/books').send({
+            title: 'Chemistry3',
+            AuthorId: testAuthor.id,
+            GenreId: testGenre.id,
+            ISBN: '12345678910',
+          });
+          const newBookRecord = await Book.findByPk(response.body.id, {
+            raw: true,
+          });
+
+          expect(response.status).to.equal(400);
+          expect(response.body).to.haveOwnProperty('errors');
+          expect(newBookRecord).to.equal(null);
+        })
+
+        it('throws an error if the ISBN is 12 digits', async() =>{
+          const response = await request(app).post('/books').send({
+            title: 'Chemistry3',
+            AuthorId: testAuthor.id,
+            GenreId: testGenre.id,
+            ISBN: '123456789101',
+          });
+          const newBookRecord = await Book.findByPk(response.body.id, {
+            raw: true,
+          });
+
+          expect(response.status).to.equal(400);
+          expect(response.body).to.haveOwnProperty('errors');
+          expect(newBookRecord).to.equal(null);
+        })
 
       });
     });
@@ -186,6 +263,46 @@ describe('/books', () => {
           expect(updatedBookRecord.title).to.equal('Chemistry3: Introducing inorganic, organic and physical chemistry');
         });
   
+        it('throws an error is the new ISBN is too short', async () =>{
+          const book = books[0];
+          const response = await request(app)
+            .patch(`/books/${book.id}`)
+            .send({ ISBN: '1234'});
+    
+            expect(response.status).to.equal(400);
+            expect(response.body).to.haveOwnProperty('errors');
+        });
+
+        it('throws an error is the new ISBN is too long', async () =>{
+          const book = books[0];
+          const response = await request(app)
+            .patch(`/books/${book.id}`)
+            .send({ ISBN: '123456789123456789'});
+    
+            expect(response.status).to.equal(400);
+            expect(response.body).to.haveOwnProperty('errors');
+        });
+
+        it('throws an error is the new ISBN is 11 digits', async () =>{
+          const book = books[0];
+          const response = await request(app)
+            .patch(`/books/${book.id}`)
+            .send({ ISBN: '12345678910'});
+    
+            expect(response.status).to.equal(400);
+            expect(response.body).to.haveOwnProperty('errors');
+        });
+
+        it('throws an error is the new ISBN is 12 digits', async () =>{
+          const book = books[0];
+          const response = await request(app)
+            .patch(`/books/${book.id}`)
+            .send({ ISBN: '123456789101'});
+    
+            expect(response.status).to.equal(400);
+            expect(response.body).to.haveOwnProperty('errors');
+        });
+
         it('returns a 404 if the book does not exist', async () => {
           const response = await request(app)
             .patch('/books/12345')
