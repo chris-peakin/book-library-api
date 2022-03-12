@@ -13,8 +13,8 @@ module.exports = (connection, DataTypes) => {
                     args: [true],
                     msg: 'The book author cannot be empty',
                 },
-            }
-        }
+            },
+        },
     }
 
     const AuthorModel = connection.define('Author', schema);

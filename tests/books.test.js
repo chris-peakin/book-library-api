@@ -56,13 +56,15 @@ describe('/books', () => {
         it('throws an error if there is no author', async () =>{
           const response = await request(app).post('/books').send({
             title: 'Chemistry3',
-            AuthorId: null,
+            AuthorId: '',
             GenreId: testGenre.id,
             ISBN: '9780198829980',
           });
           const newBookRecord = await Book.findByPk(response.body.id, {
             raw: true,
           });
+
+          console.log(newBookRecord);
 
           expect(response.status).to.equal(400);
           expect(response.body).to.haveOwnProperty('errors');
@@ -73,14 +75,15 @@ describe('/books', () => {
           const response = await request(app).post('/books').send({
             title: 'Chemistry3',
             AuthorId: testAuthor.id,
-            GenreId: null,
+            GenreId: '',
             ISBN: '9780198829980',
           });
 
           const newBookRecord = await Book.findByPk(response.body.id, {
             raw: true,
           });
-  
+          console.log(newBookRecord);
+
           expect(response.status).to.equal(400);
           expect(response.body).to.haveOwnProperty('errors');
           expect(newBookRecord).to.equal(null);
@@ -122,12 +125,12 @@ describe('/books', () => {
         books = await Promise.all([
           Book.create({
             title: 'Chemistry3',
-            AuthorId: testAuthorOne.id,
-            GenreId: testGenreOne.id,
+            author: testAuthorOne.id,
+            genre: testGenreOne.id,
             ISBN: '9780198829980',
           }),
-          Book.create({ title: 'The Hunger Games', AuthorId: testAuthorTwo.id, GenreId: testGenreTwo.id, ISBN: '9781407132082' }),
-          Book.create({ title: 'The Fellowship of the Ring', AuthorId: testAuthorThree.id, GenreId: testGenreThree.id, ISBN: '9780261103573' }),
+          Book.create({ title: 'The Hunger Games', author: testAuthorTwo.id, genre: testGenreTwo.id, ISBN: '9781407132082' }),
+          Book.create({ title: 'The Fellowship of the Ring', author: testAuthorThree.id, genre: testGenreThree.id, ISBN: '9780261103573' }),
         ]);
       });
   
@@ -142,8 +145,8 @@ describe('/books', () => {
             const expected = books.find((a) => a.id === book.id);
   
             expect(book.title).to.equal(expected.title);
-            expect(book.AuthorId).to.equal(expected.AuthorId);
-            expect(book.GenreId).to.equal(expected.GenreId);
+            expect(book.author).to.equal(expected.author);
+            expect(book.genre).to.equal(expected.genre);
             expect(book.ISBN).to.equal(expected.ISBN);
           });
         });
@@ -156,8 +159,8 @@ describe('/books', () => {
   
           expect(response.status).to.equal(200);
           expect(response.body.title).to.equal(book.title);
-          expect(response.body.AuthorId).to.equal(book.AuthorId);
-          expect(response.body.Genre).to.equal(book.GenreId);
+          expect(response.body.author).to.equal(book.author);
+          expect(response.body.genre).to.equal(book.genre);
           expect(response.body.ISBN).to.equal(book.ISBN);
         });
   

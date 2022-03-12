@@ -21,11 +21,11 @@ const removePassword = (obj) => {
 };
 
 const association = (model) =>{
-    if (model === 'book') return {include: Genre};
+    if (model === 'book') return {include: Genre, Author};
     if (model === 'genre') return {include: Book};
     if (model === 'author') return {include: Book};
     return {};
-}
+};
 
 exports.createItem = async (res, model, item) => {
     const Model = getModel(model);
