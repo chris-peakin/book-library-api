@@ -47,7 +47,7 @@ describe('/authors', () =>{
             authors = await Promise.all([
                 Author.create({author: 'Suzanne Collins'}),
                 Author.create({author: 'JRR Tolkien'}),
-                Author.create({author: 'Boaty McBoatface'})
+                Author.create({author: 'Boaty McBoatface'}),
             ]);
         });
 
