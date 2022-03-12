@@ -21,8 +21,8 @@ describe('/books', () => {
         it('creates a new book in the database', async () => {
           const response = await request(app).post('/books').send({
             title: 'Chemistry3',
-            author: testAuthor.id,
-            genre: testGenre.id,
+            AuthorId: testAuthor.id,
+            GenreId: testGenre.id,
             ISBN: '9780198829980',
           });
           const newBookRecord = await Book.findByPk(response.body.id, {
@@ -32,16 +32,16 @@ describe('/books', () => {
           expect(response.status).to.equal(201);
           expect(response.body.title).to.equal('Chemistry3');
           expect(newBookRecord.title).to.equal('Chemistry3');
-          expect(newBookRecord.author).to.equal('Andrew Burrows');
-          expect(newBookRecord.genre).to.equal('Science');
+          expect(newBookRecord.AuthorId).to.equal(testAuthor.id);
+          expect(newBookRecord.GenreId).to.equal(testGenre.id);
           expect(newBookRecord.ISBN).to.equal('9780198829980');
         });
 
         it('throws an error if there is no title', async () =>{
           const response = await request(app).post('/books').send({
             title: null,
-            author: 'Andrew Burrows',
-            genre: 'Science',
+            AuthorId: testAuthor.id,
+            GenreId: testGenre.id,
             ISBN: '9780198829980',
           });
           const newBookRecord = await Book.findByPk(response.body.id, {
@@ -56,8 +56,8 @@ describe('/books', () => {
         it('throws an error if there is no author', async () =>{
           const response = await request(app).post('/books').send({
             title: 'Chemistry3',
-            author: null,
-            genre: 'Science',
+            AuthorId: null,
+            GenreId: testGenre.id,
             ISBN: '9780198829980',
           });
           const newBookRecord = await Book.findByPk(response.body.id, {
@@ -69,29 +69,28 @@ describe('/books', () => {
           expect(newBookRecord).to.equal(null);
         })
 
-        it('does NOT throw an error if there is no genre', async () => {
+        it('throws an error if there is no genre', async () => {
           const response = await request(app).post('/books').send({
             title: 'Chemistry3',
-            author: 'Andrew Burrows',
-            genre: null,
+            AuthorId: testAuthor.id,
+            GenreId: null,
             ISBN: '9780198829980',
           });
+
           const newBookRecord = await Book.findByPk(response.body.id, {
             raw: true,
           });
   
-          expect(response.status).to.equal(201);
-          expect(response.body.title).to.equal('Chemistry3');
-          expect(newBookRecord.title).to.equal('Chemistry3');
-          expect(newBookRecord.genre).to.equal(null);
-          expect(newBookRecord.ISBN).to.equal('9780198829980');
+          expect(response.status).to.equal(400);
+          expect(response.body).to.haveOwnProperty('errors');
+          expect(newBookRecord).to.equal(null);
         });
 
         it('does NOT throw an error if there is no ISBN', async () => {
           const response = await request(app).post('/books').send({
             title: 'Chemistry3',
-            author: 'Andrew Burrows',
-            genre: 'Science',
+            AuthorId: testAuthor.id,
+            GenreId: testGenre.id,
             ISBN: null,
           });
           const newBookRecord = await Book.findByPk(response.body.id, {
@@ -111,15 +110,24 @@ describe('/books', () => {
       let books;
   
       beforeEach(async () => {
+        await Book.destroy({where: {}});
+
+        const testAuthorOne = Author.create({author: 'Andrew Burrows'});
+        const testAuthorTwo = Author.create({author: 'Suzanne Collins'});
+        const testAuthorThree = Author.create({author: 'JRR Tolkien'});
+        const testGenreOne = Genre.create({genre: 'Science'});
+        const testGenreTwo = Genre.create({genre: 'Sci-Fi'});
+        const testGenreThree = Genre.create({genre: 'Fantasy'});
+
         books = await Promise.all([
           Book.create({
             title: 'Chemistry3',
-            author: testAuthor.id,
-            genre: testGenre.id,
+            AuthorId: testAuthorOne.id,
+            GenreId: testGenreOne.id,
             ISBN: '9780198829980',
           }),
-          Book.create({ title: 'The Hunger Games', author: 'Suzanne Collins', genre: 'Sci-Fi', ISBN: '9781407132082' }),
-          Book.create({ title: 'The Fellowship of the Ring', author: 'JRR Tolkien', genre: 'Fantasy', ISBN: '9780261103573' }),
+          Book.create({ title: 'The Hunger Games', AuthorId: testAuthorTwo.id, GenreId: testGenreTwo.id, ISBN: '9781407132082' }),
+          Book.create({ title: 'The Fellowship of the Ring', AuthorId: testAuthorThree.id, GenreId: testGenreThree.id, ISBN: '9780261103573' }),
         ]);
       });
   
@@ -134,8 +142,8 @@ describe('/books', () => {
             const expected = books.find((a) => a.id === book.id);
   
             expect(book.title).to.equal(expected.title);
-            expect(book.author).to.equal(expected.author);
-            expect(book.genre).to.equal(expected.genre);
+            expect(book.AuthorId).to.equal(expected.AuthorId);
+            expect(book.GenreId).to.equal(expected.GenreId);
             expect(book.ISBN).to.equal(expected.ISBN);
           });
         });
@@ -148,8 +156,8 @@ describe('/books', () => {
   
           expect(response.status).to.equal(200);
           expect(response.body.title).to.equal(book.title);
-          expect(response.body.author).to.equal(book.author);
-          expect(response.body.genre).to.equal(book.genre);
+          expect(response.body.AuthorId).to.equal(book.AuthorId);
+          expect(response.body.Genre).to.equal(book.GenreId);
           expect(response.body.ISBN).to.equal(book.ISBN);
         });
   

@@ -21,9 +21,9 @@ const setUpDatabase = () =>{
 
     Reader.hasMany(Book);
     Genre.hasMany(Book);
-    Book.belongsTo(Genre);
+    Book.belongsTo(Genre, {foreignKey: {allowNull: false},onDelete:'CASCADE'} );
     Author.hasMany(Book);
-    Book.belongsTo(Author);
+    Book.belongsTo(Author, {foreignKey: {allowNull: false},onDelete:'CASCADE'} );
 
     connection.sync({alter: true});
     return{
