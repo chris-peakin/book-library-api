@@ -21,8 +21,8 @@ describe('/books', () => {
         it('creates a new book in the database', async () => {
           const response = await request(app).post('/books').send({
             title: 'Chemistry3',
-            author: testAuthor.author,
-            genre: testGenre.genre,
+            author: testAuthor.id,
+            genre: testGenre.id,
             ISBN: '9780198829980',
           });
           const newBookRecord = await Book.findByPk(response.body.id, {
@@ -32,8 +32,8 @@ describe('/books', () => {
           expect(response.status).to.equal(201);
           expect(response.body.title).to.equal('Chemistry3');
           expect(newBookRecord.title).to.equal('Chemistry3');
-          expect(newBookRecord.author).to.equal(testAuthor.author);
-          expect(newBookRecord.genre).to.equal(testGenre.genre);
+          expect(newBookRecord.author).to.equal('Andrew Burrows');
+          expect(newBookRecord.genre).to.equal('Science');
           expect(newBookRecord.ISBN).to.equal('9780198829980');
         });
 
@@ -83,7 +83,6 @@ describe('/books', () => {
           expect(response.status).to.equal(201);
           expect(response.body.title).to.equal('Chemistry3');
           expect(newBookRecord.title).to.equal('Chemistry3');
-          expect(newBookRecord.author).to.equal('Andrew Burrows');
           expect(newBookRecord.genre).to.equal(null);
           expect(newBookRecord.ISBN).to.equal('9780198829980');
         });
@@ -102,8 +101,6 @@ describe('/books', () => {
           expect(response.status).to.equal(201);
           expect(response.body.title).to.equal('Chemistry3');
           expect(newBookRecord.title).to.equal('Chemistry3');
-          expect(newBookRecord.author).to.equal('Andrew Burrows');
-          expect(newBookRecord.genre).to.equal('Science');
           expect(newBookRecord.ISBN).to.equal(null);
         });
 
@@ -117,8 +114,8 @@ describe('/books', () => {
         books = await Promise.all([
           Book.create({
             title: 'Chemistry3',
-            author: 'Andrew Burrows',
-            genre: 'Science',
+            author: testAuthor.id,
+            genre: testGenre.id,
             ISBN: '9780198829980',
           }),
           Book.create({ title: 'The Hunger Games', author: 'Suzanne Collins', genre: 'Sci-Fi', ISBN: '9781407132082' }),
@@ -165,17 +162,17 @@ describe('/books', () => {
       });
   
       describe('PATCH /books/:id', () => {
-        it('updates books genre by id', async () => {
+        it('updates books title by id', async () => {
           const book = books[0];
           const response = await request(app)
             .patch(`/books/${book.id}`)
-            .send({ genre: 'Education' });
+            .send({ title: 'Chemistry3: Introducing inorganic, organic and physical chemistry' });
           const updatedBookRecord = await Book.findByPk(book.id, {
             raw: true,
           });
   
           expect(response.status).to.equal(200);
-          expect(updatedBookRecord.genre).to.equal('Education');
+          expect(updatedBookRecord.title).to.equal('Chemistry3: Introducing inorganic, organic and physical chemistry');
         });
   
         it('returns a 404 if the book does not exist', async () => {

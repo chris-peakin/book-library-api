@@ -47,7 +47,7 @@ describe('/genres', () =>{
             genres = await Promise.all([
                 Genre.create({genre: 'Education'}),
                 Genre.create({genre: 'Science-Fiction'}),
-                Genre.create({genre: 'Fantasy'})
+                Genre.create({genre: 'Fantasy'}),
             ]);
         });
 
